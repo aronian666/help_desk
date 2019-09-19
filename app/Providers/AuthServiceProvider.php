@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Providers;
-
+use App\Ticket;
+use App\Policies\TicketPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -13,7 +14,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        // 'App\Model' => 'App\Policies\ModelPolicy',
+        Ticket::class => TicketPolicy::class,
     ];
 
     /**
@@ -24,7 +25,8 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
+        
+        Gate::resource('tickets', 'TicketPolicy');
         //
     }
 }

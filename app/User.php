@@ -15,6 +15,11 @@ class User extends Authenticatable
      *
      * @var array
      */
+
+    public function tickets(){
+        return $this->hasMany(Ticket::class);
+    }
+
     protected $fillable = [
         'name', 'email', 'password',
     ];
