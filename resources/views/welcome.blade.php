@@ -64,21 +64,27 @@
         </style>
     </head>
     <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
+        <div class="ui inverted segment">
+            <div class="ui inverted secondary pointing menu">
+                @if (Route::has('login'))
                     @auth
-                        <a href="{{ url('/home') }}">Home</a>
+                        <a href="{{ url('/home') }}" class="item">Home</a>    
                     @else
-                        <a href="{{ route('login') }}">Login</a>
-
+                        <a href="{{ route('login') }}" class="item">Login</a>
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
+                            <a href="{{ route('register') }}" class="item">Register</a>
                         @endif
                     @endauth
-                </div>
-            @endif
-
+                @endif
+                <a href="#" class="item">
+                    Home
+                </a>
+                <a href="#" class="item">
+                    algo
+                </a>
+            </div>
+        </div>
+        <div class="flex-center position-ref full-height">
             <div class="content">
                 <div class="title m-b-md">
                     Laravel

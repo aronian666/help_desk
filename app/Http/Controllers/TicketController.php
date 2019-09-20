@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Ticket;
+use App\Priority;
+use App\Product;
+use App\Type;
 
 class TicketController extends Controller
 {
@@ -19,6 +22,19 @@ class TicketController extends Controller
     }
 
     public function create(){
-        return 'este es para crear';
+        $priorities = Priority::all();
+        $products = Product::all();
+        $types = Type::all();
+        
+        return view('tickets/create', compact('priorities', 'products', 'types'));
+    }
+
+    public function store() {
+        $ticket = request()->all()['ticket'];
+        $ticket['user_id'] = auth()->user()->id;
+        $ticket = Ticket::create($ticket);
+        return redirect()->action(
+            'TicketController@show', ['id' => $ticket->id]
+        );
     }
 }
