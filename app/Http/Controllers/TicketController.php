@@ -11,14 +11,15 @@ use App\Type;
 class TicketController extends Controller
 {
     public function index(){
-        $tickets = auth()->user()->tickets;
+        $tickets = Ticket::all();
         return view('tickets/index', compact('tickets'));
     }
 
     public function show($id){
         $ticket = Ticket::find($id);
-        $this->authorize('view', $ticket);
-        return view('tickets/show', compact('ticket'));
+        //$this->authorize('view', $ticket);
+        $comments = $ticket->comments;
+        return view('tickets/show', compact('ticket', 'comments'));
     }
 
     public function create(){

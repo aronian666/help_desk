@@ -24,7 +24,7 @@
 <body>
     <div id="app">
         <div class="ui inverted segment">
-            <div class="ui inverted secondary pointing menu">
+            <div class="ui inverted secondary pointing menu container">
                 <a class="item" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>

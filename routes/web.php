@@ -16,6 +16,7 @@ Route::get('/', function () {
 });
 
 Route::resource('tickets', "TicketController");
+Route::resource('comments', "CommentController");
 
 Auth::routes();
 

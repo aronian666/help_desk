@@ -22,6 +22,10 @@ class Ticket extends Model
         return $this->belongsTo(Type::class);
     }
 
+    public function comments(){
+        return $this->hasMany(Comment::class);
+    }
+
     protected $fillable = [
         'title', 'description', 'user_id', 'priority_id', 'type_id', 'product_id'
     ];
