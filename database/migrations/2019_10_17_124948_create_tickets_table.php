@@ -21,6 +21,8 @@ class CreateTicketsTable extends Migration
             $table->unsignedInteger('type_id');
             $table->unsignedInteger('priority_id');
             $table->unsignedInteger('product_id');
+            $table->integer('status_id')->nullable()->unsigned();
+            $table->foreign('status_id')->references('id')->on('statuses');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('type_id')->references('id')->on('types');
             $table->foreign('priority_id')->references('id')->on('priorities');

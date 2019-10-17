@@ -26,7 +26,15 @@ class Ticket extends Model
         return $this->hasMany(Comment::class);
     }
 
+    public function status() {
+        return $this->belongsTo(Status::class);
+    }
+
+    public function shortDescription() {
+        return strlen($this->description) > 20 ? substr($this->description, 0, 20) . "..." : $this->description;
+    }
+
     protected $fillable = [
-        'title', 'description', 'user_id', 'priority_id', 'type_id', 'product_id'
+        'title', 'description', 'user_id', 'priority_id', 'type_id', 'product_id', 'status_id'
     ];
 }

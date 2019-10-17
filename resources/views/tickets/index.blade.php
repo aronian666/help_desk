@@ -18,28 +18,36 @@
                 </div>
             </div>
         </div>
-        <div class="ui items">
-            @forelse ($tickets as $ticket)
-                <div class="item">
-                    <div class="image">
-                        <img src="https://images.vexels.com/media/users/3/153290/isolated/lists/de05a2ea2ab342b4f6df780059ac003f-processor-colored-stroke-icon.png">
-                    </div>
-                    <div class="content">
-                        <a class="header" href="{{ route('tickets.show', ['ticket' => $ticket])}}">{{ e($ticket->title) }}</a>
-                        <div class="meta">
-                            <span>{{ e($ticket->description)}}</span>
-                        </div>
-                        <div class="description">
-                            <p></p>
-                        </div>
-                        <div class="extra">
-                            Ultima modificacion {{ e($ticket->updated_at) }}
-                        </div>
-                    </div>
-                </div>
-            @empty
-                <p>No hay tickets</p>
-            @endforelse
-        </div>
+        <table class="ui celled structured table">
+            <thead>
+                <tr>
+                    <th rowspan="2">Ticket</th>
+                    <th rowspan="2">Descripcion</th>
+                    <th rowspan="2">Files</th>
+                    <th colspan="4">Languages</th>
+                </tr>
+                <tr>
+                    @foreach ($statuses as $status)
+                        <th>{{ $status->name }}</th>
+                    @endforeach
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($tickets as $ticket)
+                    <tr>
+                        <td><a class="header" href="{{ route('tickets.show', ['ticket' => $ticket])}}">{{ e($ticket->title) }}</a></td>
+                        <td>{{ e($ticket->shortDescription())}}</td>
+                        <td class="right aligned">2</td>
+                        @foreach ($statuses as $status)
+                            <td class="center aligned">
+                                @if ($ticket->status->id >= $status->id)
+                                    <i class="large green checkmark icon"></i>        
+                                @endif
+                            </td>
+                        @endforeach
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     </section>
 @endsection

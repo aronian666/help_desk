@@ -24,8 +24,16 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class);
     }
 
+    public function role() {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function isSuperAdmin() {
+        return $this->role->id == 1;
+    }
+
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'role_id'
     ];
 
     /**

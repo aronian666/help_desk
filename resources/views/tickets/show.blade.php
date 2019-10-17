@@ -9,52 +9,61 @@
                 <div class="sub header">{{ $ticket->description}}</div>
             </div>
         </h2>
-
+        <div class="ui ordered steps">
+            @foreach ($statuses as $status)
+                <div class="{{ $ticket->status->id >= $status->id ? "completed" : "active" }} step">
+                    <div class="content">
+                        <div class="title">{{ $status->name }}</div>
+                        <div class="description">{{ $status->description }}</div>
+                    </div>
+                </div>    
+            @endforeach
+        </div>
         <div class="ui list">
             <div class="item">
                 <i class="users icon"></i>
                 <div class="content">
-                        <a href="#">{{ $ticket->user->name }}</a>
+                    Reportado por: <a href="#">{{ $ticket->user->name }}</a>
                 </div>
             </div>
             <div class="item">
                 <i class="calendar times icon"></i>
                 <div class="content">
-                    {{ $ticket->user->created_at }}
+                    Creado: {{ $ticket->user->created_at }}
                 </div>
             </div>
             <div class="item">
                 <i class="mail icon"></i>
                 <div class="content">
-                    <a href="mailto:{{ $ticket->user->email }}">{{ $ticket->user->email }}</a>
+                    Email: <a href="mailto:{{ $ticket->user->email }}">{{ $ticket->user->email }}</a>
                 </div>
             </div>
 
             <div class="item">
                 <i class="microchip icon"></i>
                 <div class="content">
-                    {{ $ticket->type->name }}
+                    Tipo: {{ $ticket->type->name }}
                 </div>
             </div>
 
             <div class="item">
                 <i class="keyboard icon"></i>
                 <div class="content">
-                    {{ $ticket->product->name }}
+                    Equipo: {{ $ticket->product->name }}
                 </div>
             </div>  
 
             <div class="item">
                 <i class="calendar alternate icon"></i>
                 <div class="content">
-                    {{ $ticket->priority->name }}
+                    Prioridad: {{ $ticket->priority->name }}
                 </div>
             </div>  
 
         </div>
 
         <div class="ui comments">
-            <h3 class="ui dividing header">Comments</h3>
+            <h3 class="ui dividing header">Comentarios</h3>
             @forelse ($comments as $comment)
                 <div class="comment">
                     <a class="avatar">
@@ -84,7 +93,7 @@
                 <input name="comment[user_id]" type="text" style="display: none" value="{{ auth()->user()->id }}">
                 <input name="comment[ticket_id]" type="text" style="display: none" value="{{ $ticket->id }}">
                 <button type="submit" class="ui primary button">
-                    Aniadir commentario
+                    Añadir comentario
                 </button>
             </form>
         </div>
