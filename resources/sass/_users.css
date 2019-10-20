@@ -1,0 +1,15 @@
+.disappear > label {
+    color: transparent;
+    position: absolute;
+    top: 3%; 
+    left: 3%;
+}
+.disappear i {
+    
+    color: #fff;
+}
+.disappear i:hover {
+    transform: scale(1.2);
+    transition: 1s;
+    cursor: pointer;
+}

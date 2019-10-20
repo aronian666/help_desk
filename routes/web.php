@@ -15,8 +15,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('tickets', "TicketController");
-Route::resource('comments', "CommentController");
+Route::resource('tickets', "TicketController")->middleware('auth');
+Route::resource('comments', "CommentController")->middleware('auth');
+Route::resource('users', "UserController")->middleware('auth');
 
 Auth::routes();
 

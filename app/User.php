@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Ticket;
 
 class User extends Authenticatable
 {
@@ -32,8 +33,17 @@ class User extends Authenticatable
         return $this->role->id == 1;
     }
 
+    public function createTicket()
+    {
+        return $this->role->id == 1 || $this->role->id == 2;
+    }
+
+    public function getTickets() {
+        return Ticket::where('technical_id', $this->id)->get();
+    }
+
     protected $fillable = [
-        'name', 'email', 'password', 'role_id'
+        'name', 'email', 'password', 'role_id', 'description', 'photo'
     ];
 
     /**

@@ -17,11 +17,13 @@ class StatusesTableSeeder extends Seeder
         ]);
         Status::create([
             'name' => 'Asignado',
-            'description' => 'El ticket fue asignado'
+            'description' => 'El ticket fue asignado',
+            'icon' => 'address card'
         ]);
         Status::create([
             'name' => 'En progreso',
-            'description' => 'El ticket se esta resolviendo'
+            'description' => 'El ticket se esta resolviendo',
+            'icon' => 'stethoscope'
         ]);
         Status::create([
             'name' => 'En espera',
@@ -33,7 +35,8 @@ class StatusesTableSeeder extends Seeder
         ]);
         Status::create([
             'name' => 'Resuelto',
-            'description' => 'El ticket se resolvio'
+            'description' => 'El ticket se resolvio',
+            'icon' => 'archive'
         ]);
     }
 }

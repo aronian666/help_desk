@@ -12,19 +12,21 @@
             <a href="#" class="item">
                 Completados
             </a>
-            <div class="right menu">
-                <div class="item">
-                    <a class="ui button green" href="{{route('tickets.create')}}">Crear nuevo ticket</a>
-                </div>
-            </div>
+            @if ($user->createTicket())
+                <div class="right menu">
+                    <div class="item">
+                        <a class="ui button green" href="{{route('tickets.create')}}">Crear nuevo ticket</a>
+                    </div>
+                </div>    
+            @endif
         </div>
         <table class="ui celled structured table">
             <thead>
                 <tr>
                     <th rowspan="2">Ticket</th>
                     <th rowspan="2">Descripcion</th>
-                    <th rowspan="2">Files</th>
-                    <th colspan="4">Languages</th>
+                    <th rowspan="2">Reportado por</th>
+                    <th colspan="4">Estados</th>
                 </tr>
                 <tr>
                     @foreach ($statuses as $status)
@@ -37,7 +39,7 @@
                     <tr>
                         <td><a class="header" href="{{ route('tickets.show', ['ticket' => $ticket])}}">{{ e($ticket->title) }}</a></td>
                         <td>{{ e($ticket->shortDescription())}}</td>
-                        <td class="right aligned">2</td>
+                        <td class="right aligned">{{ $ticket->user->name}}</td>
                         @foreach ($statuses as $status)
                             <td class="center aligned">
                                 @if ($ticket->status->id >= $status->id)

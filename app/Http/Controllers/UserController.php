@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
+use App\Role;
 
 class UserController extends Controller
 {
@@ -13,7 +15,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $users = User::orderBy('id')->get();
+        return view('users/index', compact('users'));
+        //return ['users' => $users, 'tickets' => Ticket::all()];
     }
 
     /**
@@ -56,7 +60,9 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = User::find($id);
+        $roles = Role::all();
+        return view('users/edit', compact('user', 'roles'));
     }
 
     /**
@@ -68,7 +74,12 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::find($id);
+        //dd($request->all()['user']);
+        $user->update($request->all()['user']);
+        return redirect()->action(
+            'UserController@edit', ['id' => $user->id]
+        );
     }
 
     /**

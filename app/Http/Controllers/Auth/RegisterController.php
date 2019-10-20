@@ -63,10 +63,19 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $photos = [
+            "/images/avatar/large/elliot.jpg",
+            "/images/avatar2/large/matthew.png",
+            "/images/avatar/large/jenny.jpg",
+            "/images/avatar2/large/kristy.png",
+            "/images/avatar2/large/elyse.png",
+        ];
+        shuffle($photos);
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'photo' => "https://semantic-ui.com".$photos[0]
         ]);
     }
 }

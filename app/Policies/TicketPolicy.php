@@ -41,7 +41,7 @@ class TicketPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->isSuperAdmin() || $user->role->id == 2; 
     }
 
     /**
@@ -53,7 +53,7 @@ class TicketPolicy
      */
     public function update(User $user, Ticket $ticket)
     {
-        return $user->id == $ticket->user_id;
+        return $user->id == $ticket->user_id || $user->isSuperAdmin();
     }
 
     /**
@@ -65,7 +65,7 @@ class TicketPolicy
      */
     public function delete(User $user, Ticket $ticket)
     {
-        return $user->id == $ticket->user_id;
+        return $user->id == $ticket->user_id || $user->isSuperAdmin();
     }
 
     /**

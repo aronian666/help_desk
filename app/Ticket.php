@@ -10,6 +10,10 @@ class Ticket extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function technical(){
+        return $this->belongsTo(User::class, 'technical_id');
+    }
+
     public function priority(){
         return $this->belongsTo(Priority::class);
     }
@@ -34,7 +38,11 @@ class Ticket extends Model
         return strlen($this->description) > 20 ? substr($this->description, 0, 20) . "..." : $this->description;
     }
 
+    public function isTechnical(User $user) {
+        return $this->technical ? $this->technical->id == $user->id : false;
+    }
+
     protected $fillable = [
-        'title', 'description', 'user_id', 'priority_id', 'type_id', 'product_id', 'status_id'
+        'title', 'description', 'user_id', 'priority_id', 'type_id', 'product_id', 'status_id', 'technical_id'
     ];
 }
