@@ -34,6 +34,10 @@ class Ticket extends Model
         return $this->belongsTo(Status::class);
     }
 
+    public function attachments() {
+        return $this->hasMany(Attachment::class);
+    }
+
     public function shortDescription() {
         return strlen($this->description) > 20 ? substr($this->description, 0, 20) . "..." : $this->description;
     }

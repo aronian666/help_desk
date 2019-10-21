@@ -16,8 +16,9 @@ Route::get('/', function () {
 });
 
 Route::resource('tickets', "TicketController")->middleware('auth');
-Route::resource('comments', "CommentController")->middleware('auth');
+Route::resource('comments', "CommentController")->only(['store']);
 Route::resource('users', "UserController")->middleware('auth');
+Route::resource('attachments', "AttachmentController")->only(['store']);
 
 Auth::routes();
 

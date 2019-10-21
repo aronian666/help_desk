@@ -144,7 +144,33 @@
                 </div>
             @endif
         @endif
-        
+
+        <h3 class="ui header">
+            <i class="image icon"></i>
+            <div class="content">
+                Imagenes
+                <div class="sub header">Suba imagenes referenciales del problema que tiene...</div>
+            </div>
+        </h3>
+        <div class="ui divider"></div>
+
+        <div class="ui four cards" id="images">
+            @foreach ($attachments as $key=>$attachment)
+                <a class="{{ $colors[$key % 10] }} card">
+                    <div class="image">
+                        <img src="{{ $attachment->url }}" alt="{{ $attachment->name }}" style="height: 280px; width: 260px">
+                    </div>
+                </a>
+            @endforeach
+        </div>
+        <div class="ui placeholder segment" style="opacity: 0.8; cursor: pointer" ondrop="uploadImage(event, {{ $ticket->id }}, {{ $user->id}})" ondragover="handleOver(event)" id="upload-image">
+            <div class="ui icon header">
+                <i class="pdf file outline icon"></i>
+                Arrastre o haga click aqui para subir una imagen
+            </div>
+        </div>
+
+
         <div class="ui comments">
             <h3 class="ui header dividing">
                 <i class="comment icon"></i>
@@ -186,6 +212,11 @@
             </form>
         </div>
     </section>
+    <script
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous">
+    </script>
     <script>
         function asingTechnical(id, step) {
             var technical = document.getElementById('ticket[technical_id]')
@@ -195,5 +226,66 @@
             var form = document.getElementById("form")
             form.submit()
         }
+        var colors = ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black']
+        var storageRef = firebase.storage().ref();
+        function uploadImage(event, ticket_id, user_id){
+            event.preventDefault()
+            var metadata = {
+              contentType: 'image/jpeg'
+            };
+            var files = event.dataTransfer.files
+            var uploaders = []
+            var names = []
+            for (var i = 0; i < files.length; i++) {
+                console.log(files[i].name)
+                names[i] = files[i].name
+                uploaders[i] = storageRef.child('tickets/' + ticket_id + '/' + files[i].name).put(files[i], metadata);
+                
+            }
+            uploadRecursive(uploaders, uploaders.length, 0, names, ticket_id, user_id)
+        }
+
+        function uploadRecursive(uploaders, size, i, names, ticket_id, user_id){
+            if (i >= size) {
+                return
+            }
+            uploaders[i].on('state_changed', function(snapshot){
+                }, function(error) {
+                }, function() {
+                    uploaders[i].snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                        $.ajax({
+                            url: '/attachments',
+                            type: 'POST',
+                            data: {
+                                attachment: {
+                                    user_id: user_id, 
+                                    ticket_id: ticket_id, 
+                                    url: downloadURL,
+                                    name: names[i]
+                                },
+                                "_token": "{{ csrf_token() }}"
+                            },
+                            success: function(){
+                                uploadRecursive(uploaders, size, i + 1, names, ticket_id, user_id)
+                                var color = colors[Math.floor(Math.random() * colors.length)];
+                                $("#images").append(`<a class="${color} card"><div class="image"><img src="${downloadURL}" alt="${names[i]}" style="height: 280px; width: 260px"></div></a>`)
+                            },
+                            error: function(e){
+                                console.error(e)
+                            }
+                        })
+                    });
+                }
+            );
+        }
+
+        function handleOver(event) {
+            console.log('estoy haciendo algo')
+            $('#upload-image').css({
+                'opacity': 1
+            })
+            event.preventDefault()
+        }
+        
     </script>
 @endsection

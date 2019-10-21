@@ -55,7 +55,6 @@
         var photo = document.getElementById('raton')
         var storageRef = firebase.storage().ref();
         photo.addEventListener('change', function(){
-            console.log(this.dataset.id)
             var file = photo.files[0]
             var metadata = {
               contentType: 'image/jpeg'

@@ -25,7 +25,9 @@ class TicketController extends Controller
         $technicals = $ticket->technical ? [$ticket->technical] : User::where('role_id', 3)->get();
         $comments = $ticket->comments;
         $statuses = Status::find([1, 2, 3, 6]);
-        return view('tickets/show', compact('technicals', 'ticket', 'comments', 'statuses', 'user'));
+        $attachments = $ticket->attachments;
+        $colors = ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black'];
+        return view('tickets/show', compact('attachments', 'technicals', 'ticket', 'comments', 'statuses', 'user', 'colors'));
     }
 
     public function create(){
