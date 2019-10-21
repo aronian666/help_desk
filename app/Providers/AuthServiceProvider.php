@@ -15,6 +15,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Ticket::class => TicketPolicy::class,
+        User::class => UserPolicy::class,
     ];
 
     /**
@@ -25,8 +26,7 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-  
+        Gate::resource('users', 'UserPolicy');
         Gate::resource('tickets', 'TicketPolicy');
-        //
     }
 }

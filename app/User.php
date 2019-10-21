@@ -46,6 +46,10 @@ class User extends Authenticatable
         return Ticket::where('technical_id', $this->id)->get();
     }
 
+    public function getSuccessTickets() {
+        return Ticket::where([['technical_id', $this->id], ['status_id', 6]])->get();
+    }
+
     protected $fillable = [
         'name', 'email', 'password', 'role_id', 'description', 'photo'
     ];

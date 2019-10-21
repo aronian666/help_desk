@@ -9,8 +9,7 @@ class CommentController extends Controller
     public function store(){
         $comment = request()->all()['comment'];
         $comment = Comment::create($comment);
-        return redirect()->action(
-            'TicketController@show', ['id' => $comment->ticket_id]
-        );
+        $user = Auth()->user();
+        return compact('comment', 'user');
     }
 }

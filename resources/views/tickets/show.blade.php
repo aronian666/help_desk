@@ -9,6 +9,13 @@
                 <div class="sub header">{{ $ticket->description}}</div>
             </div>
         </h2>
+        <h3 class="ui header">
+            <i class="user icon"></i>
+            <div class="content">
+                Principales detalles 
+                <div class="sub header">Detalles y estado</div>
+            </div>
+        </h3>
         <div class="ui steps">
             @foreach ($statuses as $status)
                 <div class="{{ $ticket->status->id >= $status->id ? "completed" : "active" }} step">
@@ -62,7 +69,18 @@
             </div>  
 
         </div>
-
+        @if ($ticket->isTechnical($user) && $ticket->status->id == 3)
+            <h3 class="ui header">
+                <i class="user icon"></i>
+                <div class="content">
+                    Opciones 
+                    <div class="sub header">¿Que desea hacer con el ticket?</div>
+                </div>
+            </h3>
+            <div class="ui divider"></div>
+            <button onclick="asingTechnical({{ $user->id }}, 6)" class="ui olive button">Marcar como finanlizado</button>    
+        @endif
+        
         <h3 class="ui header">
             <i class="user icon"></i>
             <div class="content">
@@ -71,7 +89,13 @@
             </div>
         </h3>
         <div class="ui divider"></div>
-        @if ($user->role->id == 1 || $user->role->id == 3)
+        <form action="{{ url("tickets/{$ticket->id}") }}" method="POST" style="display: none" id="form">
+            @method('patch')
+            {{ csrf_field() }}
+            <input type="text" name="ticket[technical_id]" id="ticket[technical_id]">
+            <input type="text" name="ticket[status_id]" id="ticket[status_id]">
+        </form>
+        @if (($user->role->id == 1 || $user->role->id == 3) && $ticket->status->id <= 3)
             <div class="ui cards">
                 @foreach ($technicals as $technical)
                     <div class="card">
@@ -102,12 +126,6 @@
                         </div>
                     </div>    
                 @endforeach
-                <form action="{{ url("tickets/{$ticket->id}") }}" method="POST" style="display: none" id="form">
-                    @method('patch')
-                    {{ csrf_field() }}
-                    <input type="text" name="ticket[technical_id]" id="ticket[technical_id]">
-                    <input type="text" name="ticket[status_id]" id="ticket[status_id]">
-                </form>
             </div>    
         @else
             @if ($ticket->technical)
@@ -178,34 +196,29 @@
                     Comentarios
                 </div>
             </h3>
-            @forelse ($comments as $comment)
-                <div class="comment">
-                    <a class="avatar">
-                        <img src="{{ $comment->user->photo }}" alt="{{ $comment->user->name }}">
-                    </a>
-                    <div class="content">
-                    <a class="author">{{ $comment->user->name }}</a>
-                    <div class="metadata">
-                        <span class="date">{{ $comment->created_at}}</span>
+            <div id="comments">
+                @foreach ($comments as $comment)
+                    <div class="comment">
+                        <a class="avatar">
+                            <img src="{{ $comment->user->photo }}" alt="{{ $comment->user->name }}">
+                        </a>
+                        <div class="content">
+                        <a class="author">{{ $comment->user->name }}</a>
+                        <div class="metadata">
+                            <span class="date">{{ $comment->created_at}}</span>
+                        </div>
+                        <div class="text">
+                            {{ $comment->body }}
+                        </div>
+                        </div>
                     </div>
-                    <div class="text">
-                        {{ $comment->body }}
-                    </div>
-                    <div class="actions">
-                        <a class="reply">Reply</a>
-                    </div>
-                    </div>
-                </div>    
-            @empty
-                <p> No hay commentarios aun</p>
-            @endforelse
-            <form method="POST" action="{{ url('comments') }}" class="ui reply form" >
-                {{ csrf_field()}}
+                @endforeach
+            </div>
+            
+            <form method="POST" onsubmit="submitComment(event, {{ auth()->user()->id }}, {{ $ticket->id }})" action="{{ url('comments') }}" class="ui reply form" >
                 <div class="field">
-                <textarea name="comment[body]"></textarea>
+                <textarea name="comment[body]" id="comment[body]"></textarea>
                 </div>
-                <input name="comment[user_id]" type="text" style="display: none" value="{{ auth()->user()->id }}">
-                <input name="comment[ticket_id]" type="text" style="display: none" value="{{ $ticket->id }}">
                 <button type="submit" class="ui primary button">
                     Añadir comentario
                 </button>
@@ -218,6 +231,47 @@
         crossorigin="anonymous">
     </script>
     <script>
+        function submitComment(event, user_id, ticket_id){
+            event.preventDefault()
+            var body = event.target['comment[body]'].value
+            $.ajax({
+                url: '/comments',
+                type: 'POST',
+                data: {
+                    comment: {
+                        user_id: user_id, 
+                        ticket_id: ticket_id, 
+                        body: body,
+                    },
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(data){
+                    var comment = data['comment']
+                    var user = data['user']
+                    console.log(user, comment)
+                    $('#comments').append(`
+                        <div class="comment">
+                            <a class="avatar">
+                                <img src="${user.photo}" alt="${user.name}">
+                            </a>
+                            <div class="content">
+                                <a class="author">${user.name}</a>
+                                <div class="metadata">
+                                    <span class="date">${comment.created_at}</span>
+                                </div>
+                                <div class="text">
+                                    ${comment.body}
+                                </div>
+                            </div>
+                        </div>
+                    `)
+                    document.getElementById('comment[body]').value = ''
+                },
+                error: function(e){
+                    console.error(e)
+                }
+            })
+        }
         function asingTechnical(id, step) {
             var technical = document.getElementById('ticket[technical_id]')
             var status = document.getElementById('ticket[status_id]')

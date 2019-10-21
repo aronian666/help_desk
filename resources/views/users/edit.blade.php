@@ -10,7 +10,7 @@
             <div class="four wide column">
                 <div class="ui fluid card">
                     <div class="image">
-                        <img id='img-user' src="{{ $user->photo }}" alt="{{ $user->name }}" style='width: 100%; height: 300px;'>
+                        <img id='img-user' src="{{ $user->photo }}" alt="{{ $user->name }}" style='width: 100%; height: 250px;'>
                         <div class="disappear">
                             <label for="raton">
                                 <i class="edit icon big"></i>
@@ -32,15 +32,21 @@
                         <label for="">Name</label>
                         <input type="text" name='user[name]' placeholder="Jose Arturo" value="{{ $user->name }}">
                     </div>
-                    <div class="field">
-                        <label for="">Rol</label>
-                        <select class="ui fluid search dropdown" name="user[role_id]" id="" required>
-                            <option value="">Seleccione una opcion</option>
-                            @foreach ($roles as $role)
-                                <option value="{{ $role->id }}" {{$user->role->id == $role->id ? "selected" : ""}}>{{ $role->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                    @if ($currentUser->role->id == 1)
+                        <div class="field">
+                            <label for="">Rol</label>
+                            <select class="ui fluid search dropdown" name="user[role_id]" id="" required>
+                                <option value="">Seleccione una opcion</option>
+                                @foreach ($roles as $role)
+                                    <option value="{{ $role->id }}" {{$user->role->id == $role->id ? "selected" : ""}}>{{ $role->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @else
+                        <div class="ui yellow message">
+                            Para poder editar el rol, por favor contactese con el administrador del sistema
+                        </div>
+                    @endif
                     <div class='field'>
                         <label for="">Descripcion de mi trabajo</label>
                         <textarea name="user[description]" rows="2">{{ $user->description}}</textarea>

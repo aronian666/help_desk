@@ -9,12 +9,13 @@ use App\Product;
 use App\Type;
 use App\Status;
 use App\User;
+use App\Attachment;
 
 class TicketController extends Controller
 {
     public function index(){
         $user = Auth()->user();
-        $tickets = Ticket::all();
+        $tickets = Ticket::orderBy('id')->get();
         $statuses = Status::find([1, 2, 3, 6]);
         return view('tickets/index', compact('tickets', 'statuses', 'user'));
     }
@@ -33,9 +34,11 @@ class TicketController extends Controller
     public function create(){
         $this->authorize('create', Ticket::class);
         $priorities = Priority::all();
+        $user = Auth()->user();
         $products = Product::all();
         $types = Type::all();
-        return view('tickets/create', compact('priorities', 'products', 'types'));
+        $colors = ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black'];
+        return view('tickets/create', compact('priorities', 'products', 'types', 'colors', 'user'));
     }
 
     public function store(Request $request) {
@@ -43,6 +46,13 @@ class TicketController extends Controller
         $ticket['user_id'] = auth()->user()->id;
         $ticket['status_id'] = 1;
         $ticket = Ticket::create($ticket);
+        if (request()->all()['ticket']['attachments']){
+            foreach (request()->all()['ticket']['attachments'] as $attachment) {
+                $attachment['ticket_id'] = $ticket->id;
+                $attachment['user_id'] = auth()->user()->id;
+                Attachment::create($attachment);
+            }
+        }
         return redirect()->action(
             'TicketController@show', ['id' => $ticket->id]
         );

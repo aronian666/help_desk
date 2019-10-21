@@ -43,26 +43,42 @@
       </script>
 </head>
 <body>
-    <div style="position:fixed;display:flex;flex-direction:column;top:0;bottom:0;left:0;width:250px;background:#1B1C1D;overflow-x:hidden;flex:1">
-        <div class="ui borderless compact fluid inverted vertical menu">
-            <div class="item">
-                <div class="header">Tickets</div>
-                <div class="menu">
-                    <a href="{{ url("tickets") }}" class="item">Ver todos</a>
-                    <a href="{{ url("tickets/create") }}" class="item">Crear</a>
+    @if (Auth()->user())
+        <div style="position:fixed;display:flex;flex-direction:column;top:0;bottom:0;left:0;width:250px;background:#1B1C1D;overflow-x:hidden;flex:1">
+            <div class="ui borderless compact fluid inverted vertical menu">
+                <div class="item">
+                    <a href="{{ url("users/".Auth()->user()->id) }}" class="ui logo icon image">
+                        <img src="{{ Auth()->user()->photo }}" alt="{{ Auth()->user()->name }}">
+                    </a>
+                    <a class="item" href="{{ url("users/".Auth()->user()->id) }}">
+                        <b>{{ Auth()->user()->name }}</b>
+                    </a>
                     <a class="item" href="{{ route('logout') }}"
                         onclick="event.preventDefault();
                                         document.getElementById('logout-form').submit();">
                         {{ __('Logout') }}
                     </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            @csrf
-                    </form>
+                </div>
+                <div class="item">
+                    <div class="header">Tickets</div>
+                    <div class="menu">
+                        <a href="{{ url("tickets") }}" class="item">Ver todos</a>
+                        <a href="{{ url("tickets/create") }}" class="item">Crear</a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                        </form>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="header">Usuarios</div>
+                    <div class="menu">
+                        <a href="{{ url('users') }}" class="item">Todos los usuarios</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div style="margin-left: 250px; min-width: 550px;" class="container">
+    @endif
+    <div style="{{ Auth()->user() ? "margin-left: 250px; min-width: 550px;" : "" }} padding: 30px;" class="container">
             @yield('content')
     </div>
     
