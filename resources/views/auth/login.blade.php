@@ -1,7 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="" style="display: flex; justify-content: center; align-items: center; height: 100vh">
+<div class="" style="display: flex; justify-content: center; align-items: center; height: 80vh">
+    <div style="position: fixed; width: 75vw; left: 39%; top: 39%">
+        <img src="img/help.png" alt="help" style="width: 100%">
+    </div>
     <div class="card" style="display: block; width: 500px;">
         <div class="card-header">Ingresar</div>
 

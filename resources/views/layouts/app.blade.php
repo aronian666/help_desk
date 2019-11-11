@@ -15,8 +15,7 @@
 
 <!-- TODO: Add SDKs for Firebase products that you want to use
      https://firebase.google.com/docs/web/setup#available-libraries -->
-    <script src="{{ asset('js/app.js') }}" defer></script
-        >
+    <script src="{{ asset('js/app.js') }}" defer></script>
     <script rel="stylesheet" type="text/css" href="{{ asset('js/semantic.min.js') }}"></script>
 
     <!-- Fonts -->
@@ -26,6 +25,58 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/semantic.min.css') }}">
+    <style>
+        html, body {
+            background-color: #fff;
+            color: #636b6f;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 200;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .full-height {
+            height: 100vh;
+        }
+
+        .flex-center {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+        }
+
+        .position-ref {
+            position: relative;
+        }
+
+        .top-right {
+            position: absolute;
+            right: 10px;
+            top: 18px;
+        }
+
+        .content {
+            text-align: center;
+        }
+
+        .title {
+            font-size: 84px;
+        }
+
+        .links > a {
+            color: #636b6f;
+            padding: 0 25px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: .1rem;
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+
+        .m-b-md {
+            margin-bottom: 30px;
+        }
+    </style>
     <script>
         // Your web app's Firebase configuration
         var firebaseConfig = {
@@ -43,6 +94,19 @@
       </script>
 </head>
 <body>
+    @if (Route::has('login'))
+        <div class="top-right links">
+            @auth
+                <a href="{{ url('/tickets') }}">Tickets</a>
+            @else
+                <a href="{{ route('login') }}">Login</a>
+
+                @if (Route::has('register'))
+                    <a href="{{ route('register') }}">Register</a>
+                @endif
+            @endauth
+        </div>
+    @endif
     @if (Auth()->user())
         <div style="position:fixed;display:flex;flex-direction:column;top:0;bottom:0;left:0;width:250px;background:#1B1C1D;overflow-x:hidden;flex:1">
             <div class="ui borderless compact fluid inverted vertical menu">
